@@ -20,6 +20,9 @@ class Room (models.Model):
   updated = models.DateTimeField(auto_now=True) #whenever something changes
   created = models.DateTimeField(auto_now_add=True) #only once, when object created
 
+  class Meta:
+    ordering = ['-updated', '-created'] # A dash at the start reverses the ordering
+
   def __str__(self):
     return self.name
   
