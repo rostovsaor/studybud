@@ -1,4 +1,5 @@
 # from multiprocessing import context
+from multiprocessing import context
 from django.shortcuts import render, redirect
 from .models import Room
 from .forms import RoomForm
@@ -29,8 +30,28 @@ def createRoom(request):
     # Since we are useing a model form, it automatically gets all the data and organizes it
     form = RoomForm(request.POST)
     if form.is_valid():
-      form.save() #this saves the model instance in the database
+      form.save() #this saves the form instance in the database
       return redirect('home')
 
   context = {'form': form}
   return render(request, 'base/room_form.html', context)
+
+def updateRoom(request, pk):
+  room = Room.objects.get(id=pk)
+  form = RoomForm(instance=room) # prefils the form
+
+  if request.method == 'POST':
+    form = RoomForm(request.POST, instance = room) #specifying which room to update with the data submitted in the request
+    if form.is_valid():
+      form.save()
+      return redirect('home')
+
+  context = {'form': form}
+  return render(request, 'base/room_form.html', context)
+
+def deleteRoom(request,pk):
+  room = Room.objects.get(id=pk)
+  if request.method == 'POST':
+    room.delete()
+    return redirect('home')
+  return render(request, 'base/delete.html', {'obj': room})
