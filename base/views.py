@@ -25,9 +25,10 @@ def home(request):
     Q(description__icontains=q)
   )
 
-  topics =  Topic.objects.all()
+  topics = Topic.objects.all()
+  room_count = rooms.count() # The count() method is faster than the len() method
 
-  context = {'rooms': rooms, 'topics': topics}
+  context = {'rooms': rooms, 'topics': topics, 'room_count': room_count}
   return render(request, 'base/home.html', context)
 
 def room(request, pk):
